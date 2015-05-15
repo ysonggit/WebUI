@@ -12,12 +12,13 @@ function Point (i, j){
 
 var max_x = 800, min_x = 0;
 var max_y = 600, min_y = 0;
-
+var radius = 50;
 var origin = new Point(min_x, max_y);
-var clickedPoints = [];
 var r_width=10, r_height=10;
 
-// get click position
+var posemap = new Map(); // hash map : key is rid, value is Point
+
+// get mouse position on canvas based on new coordinates
 function getPosition(event){
     var x = event.x;
     var y = event.y;
@@ -27,6 +28,18 @@ function getPosition(event){
     y = origin.y - y;
 
     document.getElementById("mousepos").innerHTML= ("Position: (" + x + " , " + y+")");
+}
+
+// insert Position to table and display
+function insertPosition(i, x, y){
+    var ptable = document.getElementById("posetable");
+    var newrow = ptable.insertRow(ptable.rows.length);
+    var idcell = newrow.insertCell(0);
+    var posecell = newrow.insertCell(1);
+    var rpose = new Point(x, y);
+    posemap.set(i, rpose);
+    idcell.innerHTML=i;
+    posecell.innerHTML="("+posemap.get(i).x+", "+posemap.get(i).y+")";
 }
 
 function Shape(x, y, w, h, fillcolor){
@@ -48,6 +61,20 @@ Shape.prototype.contains = function(mx, my) {
   // the shape's X and (X + Width) and its Y and (Y + Height)
   return  (this.x <= mx) && (this.x + this.w >= mx) &&
           (this.y <= my) && (this.y + this.h >= my);
+}
+
+Shape.prototype.drawLine = function (context, neighbor){
+    context.strokeStyle ="blue";
+    context.lineWidth = 1;
+    context.beginPath();
+    context.moveTo(this.x+this.w/2, this.y+this.h/2);
+    context.lineTo(neighbor.x+neighbor.w/2, neighbor.y+neighbor.h/2);
+    context.stroke();
+}
+
+Shape.prototype.isNeighbor = function (s, radius){
+    if(Math.pow(s.x-this.x, 2) + Math.pow(s.y - this.y, 2) <= Math.pow(radius, 2) ) return true;
+    return false;
 }
 
 function CanvasState(canvas){
@@ -136,8 +163,13 @@ function CanvasState(canvas){
     // double click for making new shapes
     canvas.addEventListener('dblclick', function(e) {
         var mouse = myState.getMouse(e);
+        var rid = myState.shapes.length+1;
+        var pose_x = mouse.x;
+        var pose_y = origin.y - mouse.y;
+        insertPosition(rid, pose_x, pose_y);
         myState.addShape(new Shape(mouse.x - 10, mouse.y - 10, 10, 10, 'rgba(255,0,0,.8)'));
     }, true);
+    
 
     //canvas.addEventListener("mousedown", getPosition, false);
     this.selectionColor = '#AAAAAA';
@@ -204,7 +236,15 @@ CanvasState.prototype.draw = function() {
                 shape.x + shape.w < 0 || shape.y + shape.h < 0) continue;
             shapes[i].draw(ctx);
         }
-        
+        for (var i=0; i<l; i++){
+            for(var j = 0; j<l; j++){
+                if(i!= j){
+                    if(shapes[i].isNeighbor(shapes[j], radius)){
+                        shapes[i].drawLine(ctx, shapes[j]);
+                    }
+                }
+            }
+        }
         // draw selection
         // right now this is just a stroke along the edge of the selected Shape
         if (this.selection != null) {
@@ -250,4 +290,6 @@ function init() {
     var cs = new CanvasState(document.getElementById('canvas'));
     //var canvas = document.getElementById("canvas");
 }
+
+
 

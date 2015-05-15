@@ -12,20 +12,32 @@
     <link href="https://zybuluo.com/static/assets/mdeditor/e858f756.layout.min.css" rel="stylesheet" media="screen">
     <link href="https://zybuluo.com/static/assets/2e85637e.mdeditor.lib.min.css" rel="stylesheet" media="screen">
     <style>
-
+    .container{
+        width=1000px;
+    }
     </style>
     <script src="js/drawcanvas.js"></script>
   </head>
   <body onload="init()" "class="theme">
-    <div class="container">
+    <div class="container"> 
       <h1> Experiments Setup </h1>
-      <h3> Double Click to Add New Position</h3>
-      <p id="mousepos">Position: </p>
-    
-      <canvas id="canvas" width ="800" height="600"> </canvas>
-     
+      <div id="canvas-column" class="pull-left">
+          <h3> Double Click to Add New Position</h3>
+          <p id="mousepos">Position: </p>
+          <canvas id="canvas" width ="800" height="600">
+          </canvas>
+      </div>
+      <div id="ptable-column" class="pull-right">
+          <h3> Robots Poses </h3>
+          <table id="posetable" class="table">
+              <thead>
+                  <td>Robot ID</td>
+                  <td>Pose (x,y)</td>
+              </thead>
+
+          </table>
+      </div>
     </div>
-    <hr>
   </body>
 </html>
 
