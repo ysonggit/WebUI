@@ -36,14 +36,18 @@ function insertPosition(i, x, y){
     var idcell = newrow.insertCell(0);
     var posecell = newrow.insertCell(1);
     idcell.innerHTML=i;
-    posecell.innerHTML=x+", "+y;
+    var randangle= Math.random() * 2 * Math.PI; // random number between 0 to 2PI
+    randangle = Math.round(randangle * 100)/100;
+    posecell.innerHTML=x+", "+y+", "+randangle.toString();
 }
 
 function updateTable(i, x, y){
     var ptable = document.getElementById("posetable");
     var posecell = ptable.rows[i].cells[1];
     // update ptable
-    posecell.innerHTML=x+", "+y;
+    var randangle= Math.random() * 2 * Math.PI; // random number between 0 to 2PI
+    randangle = Math.round(randangle * 100)/100;
+    posecell.innerHTML=x+", "+y+", "+randangle.toString();
 }
 
 function Shape(x, y, w, h, fillcolor){
@@ -218,7 +222,7 @@ CanvasState.prototype.draw = function() {
             ctx.lineTo(max_x, y);
         }
         ctx.lineWidth=1;
-        ctx.strokeStyle="#e8e8e8";
+        ctx.strokeStyle="#ccc";
         ctx.stroke();
 
         ctx.lineWidth=3;
@@ -322,5 +326,7 @@ function download(filename) {
         pom.click();
     }
 }
- 
+
+
+
 

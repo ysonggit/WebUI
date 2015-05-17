@@ -16,6 +16,12 @@
              width=1000px;
          }
         </style>
+        <script type="text/javascript"
+                src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+        </script>
+        <script type="text/x-mathjax-config">
+         MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+        </script>
         <script src="js/drawcanvas.js"></script>
     </head>
     <body onload="init()" "class="theme">
@@ -27,15 +33,21 @@
                 <canvas id="canvas" width ="800" height="600">
                 </canvas>
                 <p> (0,0)</p>
-                <input type="button" value="Download Initial Poses As Text File" onclick="download('initialposes.txt');">
-                
+                <table>
+                    <tr>
+                        <td colspan="2">
+                            <input type="button" onclick="download('initialposes.txt');" value="Download Initial Poses As Text File">
+                        </td>
+                    </tr>
+                </table>
+                    <p></p>
             </div>
             <div id="ptable-column" class="pull-right">
                 <h3> Robots Poses </h3>
                 <table id="posetable" class="table">
                     <thead>
                         <td>Robot ID</td>
-                        <td>Pose (x,y)</td>
+                        <td>Pose ($x, y, \theta$)</td>
                     </thead>
 
                 </table>
