@@ -16,7 +16,6 @@ var radius = 50;
 var origin = new Point(min_x, max_y);
 var r_width=10, r_height=10;
 var selected_id = -1;
-var posemap = new Map(); // hash map : key is rid, value is Point
 
 // get mouse position on canvas based on new coordinates
 function getPosition(event){
@@ -36,16 +35,15 @@ function insertPosition(i, x, y){
     var newrow = ptable.insertRow(ptable.rows.length);
     var idcell = newrow.insertCell(0);
     var posecell = newrow.insertCell(1);
-    var rpose = new Point(x, y);
-    posemap.set(i, rpose);
     idcell.innerHTML=i;
-    posecell.innerHTML="("+posemap.get(i).x+", "+posemap.get(i).y+")";
+    posecell.innerHTML=x+", "+y;
 }
 
 function updateTable(i, x, y){
     var ptable = document.getElementById("posetable");
     var posecell = ptable.rows[i].cells[1];
-    posecell.innerHTML="("+x+", "+y+")";
+    // update ptable
+    posecell.innerHTML=x+", "+y;
 }
 
 function Shape(x, y, w, h, fillcolor){
@@ -303,6 +301,26 @@ function init() {
     var cs = new CanvasState(document.getElementById('canvas'));
 }
 
+function download(filename) {
+    var pom = document.createElement('a');
+    var ptable = document.getElementById("posetable");
+    var text="";
+    for (var i = 1, row; row = ptable.rows[i]; i++) {
+        //iterate through rows
+        //rows would be accessed using the "row" variable assigned in the for loop
+        text = text + row.cells[1].innerHTML+"\n";
+    }
+    pom.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+    pom.setAttribute('download', filename);
 
-
+    if (document.createEvent) {
+        var event = document.createEvent('MouseEvents');
+        event.initEvent('click', true, true);
+        pom.dispatchEvent(event);
+    }
+    else {
+        pom.click();
+    }
+}
+ 
 
