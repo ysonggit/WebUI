@@ -15,7 +15,7 @@ var max_y = 600, min_y = 0;
 var radius = 50;
 var origin = new Point(min_x, max_y);
 var r_width=10, r_height=10;
-
+var selected_id = -1;
 var posemap = new Map(); // hash map : key is rid, value is Point
 
 // get mouse position on canvas based on new coordinates
@@ -42,6 +42,12 @@ function insertPosition(i, x, y){
     posecell.innerHTML="("+posemap.get(i).x+", "+posemap.get(i).y+")";
 }
 
+function updateTable(i, x, y){
+    var ptable = document.getElementById("posetable");
+    var posecell = ptable.rows[i].cells[1];
+    posecell.innerHTML="("+x+", "+y+")";
+}
+
 function Shape(x, y, w, h, fillcolor){
     this.x = x;
     this.y = y;
@@ -53,6 +59,12 @@ function Shape(x, y, w, h, fillcolor){
 Shape.prototype.draw = function (context){
     context.fillStyle = this.fill;
     context.fillRect(this.x, this.y, this.w, this.h);
+}
+
+Shape.prototype.drawText = function (context, i){
+    context.font="18px Arial";
+    context.fillStyle= "black";
+    context.fillText((i+1).toString(), this.x+this.w, this.y+this.h+this.h);
 }
 
 // Determine if a point is inside the shape's bounds
@@ -129,6 +141,7 @@ function CanvasState(canvas){
         for (var i = l-1; i >= 0; i--) {
             if (shapes[i].contains(mx, my)) {
                 var mySel = shapes[i];
+                selected_id = i+1;
                 // Keep track of where in the object we clicked
                 // so we can move it smoothly (see mousemove)
                 myState.dragoffx = mx - mySel.x;
@@ -155,6 +168,7 @@ function CanvasState(canvas){
             myState.selection.x = mouse.x - myState.dragoffx;
             myState.selection.y = mouse.y - myState.dragoffy;   
             myState.valid = false; // Something's dragging so we must redraw
+            updateTable(selected_id, myState.selection.x, myState.selection.y); // update table pose
         }
     }, true);
     canvas.addEventListener('mouseup', function(e) {
@@ -170,8 +184,6 @@ function CanvasState(canvas){
         myState.addShape(new Shape(mouse.x - 10, mouse.y - 10, 10, 10, 'rgba(255,0,0,.8)'));
     }, true);
     
-
-    //canvas.addEventListener("mousedown", getPosition, false);
     this.selectionColor = '#AAAAAA';
     this.selectionWidth = 2;  
     this.interval = 30;
@@ -235,6 +247,7 @@ CanvasState.prototype.draw = function() {
             if (shape.x > this.width || shape.y > this.height ||
                 shape.x + shape.w < 0 || shape.y + shape.h < 0) continue;
             shapes[i].draw(ctx);
+            shapes[i].drawText(ctx, i);
         }
         for (var i=0; i<l; i++){
             for(var j = 0; j<l; j++){
@@ -288,8 +301,8 @@ CanvasState.prototype.getMouse = function(e) {
 
 function init() {
     var cs = new CanvasState(document.getElementById('canvas'));
-    //var canvas = document.getElementById("canvas");
 }
+
 
 
 
