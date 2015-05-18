@@ -38,7 +38,7 @@ function insertPosition(i, x, y){
     idcell.innerHTML=i;
     var randangle= Math.random() * 2 * Math.PI; // random number between 0 to 2PI
     randangle = Math.round(randangle * 100)/100;
-    posecell.innerHTML=x+", "+y+", "+randangle.toString();
+    posecell.innerHTML=x+","+y+","+randangle.toString();
 }
 
 function updateTable(i, x, y){
@@ -47,7 +47,7 @@ function updateTable(i, x, y){
     // update ptable
     var randangle= Math.random() * 2 * Math.PI; // random number between 0 to 2PI
     randangle = Math.round(randangle * 100)/100;
-    posecell.innerHTML=x+", "+y+", "+randangle.toString();
+    posecell.innerHTML=x+","+y+","+randangle.toString();
 }
 
 function Shape(x, y, w, h, fillcolor){
@@ -312,7 +312,9 @@ function download(filename) {
     for (var i = 1, row; row = ptable.rows[i]; i++) {
         //iterate through rows
         //rows would be accessed using the "row" variable assigned in the for loop
-        text = text + row.cells[1].innerHTML+"\n";
+        var rpose = row.cells[1].innerHTML;
+        var repl = rpose.replace(/,/g, "#"); // replace all , with #
+        text = text + repl +"\n";
     }
     pom.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
     pom.setAttribute('download', filename);
