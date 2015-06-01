@@ -36,26 +36,42 @@
                 <table>
                     <tr>
                         <td colspan="2">
-                            <input type="button" onclick="download('initialposes.txt');" value="Download Initial Poses As Text File">
+                          <input type="button" onclick="download('initialposes.txt','posetable');" value="Download Initial Poses As Text File">
+                        </td>
+                        <td>
+                          Put it in "~/.ros/"
                         </td>
                     </tr>
                 </table>
-                <p>
-                
-                </p>
+
+                <p> Enter number of ROS nodes : </p>
+                <input id="nodesnum" type="text" >
+                <p> Enter number of servers to be used (Maximum 20): </p>
+                <input id="serversnum" type="text">
+                <br>
+                <input value="distribute tasks" type="button" onclick="distribute()">
+              
+                <input type="button" onclick="download('servers.txt','serverstable');" value="Download Tasks File">
             </div>
             <div id="ptable-column" class="pull-right">
                 <h3> Robots Poses </h3>
                 <table id="posetable" class="table">
-                    <thead>
-                        <td>Robot ID</td>
-                        <td>Pose ($x, y, \theta$)</td>
-                    </thead>
+                    <tr>
+                        <th>Robot ID</th>
+                        <th>Pose ($x, y, \theta$)</th>
+                    </tr>
 
+                </table>
+                <hr>
+                <table id="serverstable" class="table">
+                  <tr>
+                    <th> Host </th>
+                    <th> Tasks </th>
+                  </tr>
                 </table>
             </div>
         </div>
-        
+
     </body>
 </html>
 

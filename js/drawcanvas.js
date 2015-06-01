@@ -305,16 +305,16 @@ function init() {
     var cs = new CanvasState(document.getElementById('canvas'));
 }
 
-function download(filename) {
+function download(filename, tableid) {
     var pom = document.createElement('a');
-    var ptable = document.getElementById("posetable");
+    var ptable = document.getElementById(tableid);
     var text="";
     for (var i = 1, row; row = ptable.rows[i]; i++) {
         //iterate through rows
         //rows would be accessed using the "row" variable assigned in the for loop
         var rpose = row.cells[1].innerHTML;
-        var repl = rpose.replace(/,/g, "#"); // replace all , with #
-        text = text + repl +"\n";
+        //var repl = rpose.replace(/,/g, "#"); // replace all , with #
+        text = text + rpose +"\n";
     }
     pom.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
     pom.setAttribute('download', filename);
@@ -329,6 +329,32 @@ function download(filename) {
     }
 }
 
+function distribute(){
+    var serversnum = parseInt(document.getElementById("serversnum").value);
+    var tasksnum = parseInt(document.getElementById("nodesnum").value);
+    var aver = tasksnum / serversnum;
+    var tasktable = document.getElementById("serverstable");
+    var serverid = 1;
+    var taskid = 0;
+    for(var r=tasktable.rows.length-1; r>0; r--){
+        tasktable.deleteRow(r);
+    }
+    for(var i=1; i<=serversnum; i++){
+        var row = tasktable.insertRow(tasktable.rows.length);
+        var cell1 = row.insertCell(0);
+        var cell2 = row.insertCell(1);
+        var tasksids = "";
+        for(var j=1; j<=aver; j++){
+            taskid++;
+            tasksids += taskid.toString();
+            if(j<aver) tasksids += ",";
+        }
+        if(taskid==tasksnum-1) tasksids += tasksnum.toString();
+        cell1.innerHTML=serverid.toString();
+        cell2.innerHTML=tasksids;
+        serverid++;
+    }
+}
 
 
 
